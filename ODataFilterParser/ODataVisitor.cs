@@ -52,11 +52,11 @@ namespace ODataFilterParser
             var left = Visit(context.expression(0)).ToString();
             var right = Visit(context.expression(1)).ToString();
 
-            if (context.keyword.Type == ODataParser.K_AND)
+            if (context.logic.Type == ODataParser.K_AND)
             {
                 return $"{left} AND {right}";
             }
-            else if (context.keyword.Type == ODataParser.K_OR)
+            else if (context.logic.Type == ODataParser.K_OR)
             {
                 return $"{left} OR {right}";
             }
@@ -64,12 +64,14 @@ namespace ODataFilterParser
             return string.Empty;
         }
 
-        public override object VisitEquals(ODataParser.EqualsContext context)
-        {
-            var left = Visit(context.expression(0)).ToString();
-            var right = Visit(context.expression(1)).ToString();
 
-            switch (context.operate.Type)
+        public override object VisitCompare(ODataParser.CompareContext context)
+        {
+            var left = context.column.Text;
+            var right = context.value.Text;
+            var compare = context.compare.Type;
+
+            switch (compare)
             {
                 case ODataParser.Equal:
                     return $"{left} = {right}";
@@ -92,14 +94,12 @@ namespace ODataFilterParser
                 default:
                     return string.Empty;
             }
-
-            return string.Empty;
         }
 
-        public override object VisitText([NotNull] ODataParser.TextContext context)
-        {
-            object obj = context.GetText();
-            return obj;
-        }
+        //public override object VisitText([NotNull] ODataParser.TextContext context)
+        //{
+        //    object obj = context.GetText();
+        //    return obj;
+        //}
     }
 }

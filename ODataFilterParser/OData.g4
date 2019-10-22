@@ -8,16 +8,15 @@ program: expression;
 
 expression:
 	'(' expression ')' # Parenthesis
-	| expression operate = (
+	| column=COLUMN_NAME compare=(
 		Equal
 		| NotEqual
 		| GreaterThan
 		| GreaterThanOrEqual
 		| LessThan
-		| LessThanOrEqual
-	) expression										# Equals
-	| expression keyword = (K_AND | K_OR) expression	# Logic
-	| TEXT												# Text;
+		| LessThanOrEqual) value=TEXT # Compare
+	| expression logic = (K_AND | K_OR) expression	# Logic
+	;
 
 /*
  * Lexer Rules
@@ -33,9 +32,23 @@ GreaterThanOrEqual: G E;
 LessThan: L T;
 LessThanOrEqual: L E;
 
-TEXT: (LOWERCASE | UPERCASE | DIGIT)+;
+COLUMN_NAME
+   : VALID_ID_START VALID_ID_CHAR*
+   | '[' COLUMN_NAME ']'
+   ;
 
-SPACES: [ \u000B\t\r\n] -> channel(HIDDEN);
+TEXT
+	:'"' .*? '"'
+	|'\'' .*? '\''
+	;
+   
+fragment VALID_ID_START
+   : LOWERCASE | UPERCASE | '_'
+   ;
+
+fragment VALID_ID_CHAR
+   : VALID_ID_START | (LOWERCASE | UPERCASE | DIGIT )
+   ;
 
 fragment LOWERCASE: [a-z];
 fragment UPERCASE: [A-Z];
@@ -68,3 +81,5 @@ fragment W: [wW];
 fragment X: [xX];
 fragment Y: [yY];
 fragment Z: [zZ];
+
+SPACES: [ \u000B\t\r\n] -> channel(HIDDEN);

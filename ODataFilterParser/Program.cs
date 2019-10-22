@@ -1,4 +1,4 @@
-﻿using Antlr4.Runtime;
+﻿using Antlr4.Runtime;//
 using System;
 
 namespace ODataFilterParser
@@ -7,14 +7,15 @@ namespace ODataFilterParser
     {
         static void Main(string[] args)
         {
+            //string input = @"startswith(aaa, 'xde')";
             //string input = @"aaa LE xde";
             //string input = @"aaa = xde AND bbb = ff or ccc = gg AND (ddd = b or eee = abc)";
             //string input = @"aaa EQ de AND bbb EQ ff or ccc EQ gg AND (ddd EQ b or eee EQ abc)";
 
             //string input = @"123 = 312 AND 3 = 4 or 5 EQ 66 AND (77 EQ 88 or 99 LE 1010)";
-            string input = @"aaa EQ de123 AND bbb NE ff or ccc EQ gg AND (ddd EQ b or eee LE abc)";
+            //string input = @"aaa EQ de123 AND [bbb] NE ff or ccc EQ gg AND (ddd EQ b or eee LE abc)";
             //string input = @"aaa EQ 'de' AND 'bbb' eQ 'ff' or ccc EQ 'gg' AND (ddd EQ 'b' or eee EQ 'a123')";
-            //string input = "[aaa] EQ \"de\" AND bbb eQ \"ff\" or ccc EQ \"gg\" AND (ddd EQ \"b\" or eee EQ \"a123\")";
+            string input = "[aaa] EQ \"de\" AND bbb eQ \"ff\" or ccc EQ 'gg' AND (ddd EQ \"b\" or eee LE \"a123\")";
 
             var stream = new AntlrInputStream(input);
             var lexer = new ODataLexer(stream);
@@ -28,7 +29,7 @@ namespace ODataFilterParser
             Console.WriteLine(tree.ToStringTree(parser));
             Console.WriteLine(" in:" + input);
             Console.WriteLine("out:" + result);
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
