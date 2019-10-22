@@ -8,6 +8,9 @@ program: expression;
 
 expression:
 	'(' expression ')' # Parenthesis
+	| K_STARTSWITH '(' column=COLUMN_NAME ',' value=TEXT ')' # StartsWith
+	| K_ENDSWITH '(' column=COLUMN_NAME ',' value=TEXT ')' # EndsWith
+	| K_CONTAINS '(' column=COLUMN_NAME ',' value=TEXT ')' # Contains
 	| column=COLUMN_NAME compare=(
 		Equal
 		| NotEqual
@@ -24,6 +27,9 @@ expression:
 
 K_AND: A N D;
 K_OR: O R;
+K_STARTSWITH: S T A R T S W I T H;
+K_ENDSWITH: E N D S W I T H;
+K_CONTAINS: C O N T A I N S;
 
 Equal: E Q;
 NotEqual: N E;

@@ -1,14 +1,14 @@
-﻿using Antlr4.Runtime;//
-using System;
+﻿using System;
 
 namespace ODataFilterParser
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            //string input = @"startswith(aaa, 'xde')";
+            //string input = @"startswith(aaa, 'xd AND e') and endswith(bbb, ""555"") or contains(ccc, '666')";
             //string input = @"aaa LE xde";
+            //string input = "aaa LE \"xd e\"";
             //string input = @"aaa = xde AND bbb = ff or ccc = gg AND (ddd = b or eee = abc)";
             //string input = @"aaa EQ de AND bbb EQ ff or ccc EQ gg AND (ddd EQ b or eee EQ abc)";
 
@@ -16,19 +16,9 @@ namespace ODataFilterParser
             //string input = @"aaa EQ de123 AND [bbb] NE ff or ccc EQ gg AND (ddd EQ b or eee LE abc)";
             //string input = @"aaa EQ 'de' AND 'bbb' eQ 'ff' or ccc EQ 'gg' AND (ddd EQ 'b' or eee EQ 'a123')";
             string input = "[aaa] EQ \"de\" AND bbb eQ \"ff\" or ccc EQ 'gg' AND (ddd EQ \"b\" or eee LE \"a123\")";
-
-            var stream = new AntlrInputStream(input);
-            var lexer = new ODataLexer(stream);
-            var tokens = new CommonTokenStream(lexer);
-            var parser = new ODataParser(tokens);
-            var tree = parser.program();
-
-            var visitor = new ODataVisitor();
-            var result = visitor.Visit(tree);
-
-            Console.WriteLine(tree.ToStringTree(parser));
+            var sql = ODataFilterParser.Parser(input);
             Console.WriteLine(" in:" + input);
-            Console.WriteLine("out:" + result);
+            Console.WriteLine("out:" + sql);
             //Console.ReadKey();
         }
     }

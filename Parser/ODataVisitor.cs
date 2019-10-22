@@ -7,7 +7,7 @@ using Antlr4.Runtime.Misc;
 
 namespace ODataFilterParser
 {
-    public class ODataVisitor : ODataBaseVisitor<object>
+    internal class ODataVisitor : ODataBaseVisitor<object>
     {
         Dictionary<string, object> memory = new Dictionary<string, object>();
 
@@ -94,6 +94,31 @@ namespace ODataFilterParser
                 default:
                     return string.Empty;
             }
+        }
+
+        public override object VisitStartsWith([NotNull] ODataParser.StartsWithContext context)
+        {
+            var column = context.column.Text;
+            var val = context.value.Text;
+
+            return $"{column} like {val}%";
+        }
+
+        public override object VisitEndsWith([NotNull] ODataParser.EndsWithContext context)
+        {
+            var column = context.column.Text;
+            var val = context.value.Text;
+
+            return $"{column} like %{val}";
+
+        }
+
+        public override object VisitContains([NotNull] ODataParser.ContainsContext context)
+        {
+            var column = context.column.Text;
+            var val = context.value.Text;
+
+            return $"{column} like %{val}%";
         }
 
         //public override object VisitText([NotNull] ODataParser.TextContext context)
