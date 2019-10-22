@@ -1,0 +1,14 @@
+T__0=1
+T__1=2
+K_AND=3
+K_OR=4
+Equal=5
+NotEqual=6
+GreaterThan=7
+GreaterThanOrEqual=8
+LessThan=9
+LessThanOrEqual=10
+TEXT=11
+SPACES=12
+'('=1
+')'=2

@@ -1,0 +1,1 @@
+aaa EQ de123 AND bbb NE ff or ccc EQ gg AND (ddd EQ b or eee LE abc)
