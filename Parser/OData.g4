@@ -7,29 +7,60 @@ grammar OData;
 program: expression;
 
 expression:
-	'(' expression ')' # Parenthesis
-	| K_STARTSWITH '(' column=COLUMN_NAME ',' value=TEXT ')' # StartsWith
-	| K_ENDSWITH '(' column=COLUMN_NAME ',' value=TEXT ')' # EndsWith
-	| K_CONTAINS '(' column=COLUMN_NAME ',' value=TEXT ')' # Contains
-	| column=COLUMN_NAME compare=(
+	LP expression RP # Parenthesis
+	| K_STARTSWITH LP column=column_name ',' value=TEXT RP # StartsWith
+	| K_ENDSWITH LP column=column_name ',' value=TEXT RP # EndsWith
+	| K_CONTAINS LP column=column_name ',' value=TEXT RP # Contains
+	| column=column_name K_IN LP value=decimal_array RP # InDecimal
+	| column=column_name K_IN LP value=string_array RP # InText
+	| column=column_name compare=(
 		Equal
 		| NotEqual
 		| GreaterThan
 		| GreaterThanOrEqual
 		| LessThan
-		| LessThanOrEqual) value=TEXT # Compare
+		| LessThanOrEqual) value=decimal # CompareDecimal
+	| column=column_name compare=(
+		Equal
+		| NotEqual
+		| GreaterThan
+		| GreaterThanOrEqual
+		| LessThan
+		| LessThanOrEqual) value=TEXT # CompareText
 	| expression logic = (K_AND | K_OR) expression	# Logic
+	;
+	
+column_name
+   : COLUMN_NAME
+   | '[' column_name ']'
+   ;
+
+string_array
+	: TEXT (',' TEXT)*
+	;
+
+decimal_array
+	: NUMBER (',' NUMBER)*
+	;
+
+text: TEXT;
+
+decimal 
+	: NUMBER
 	;
 
 /*
  * Lexer Rules
  */
 
+K_IN: I N;
 K_AND: A N D;
 K_OR: O R;
 K_STARTSWITH: S T A R T S W I T H;
 K_ENDSWITH: E N D S W I T H;
 K_CONTAINS: C O N T A I N S;
+LP : '(';
+RP : ')';
 
 Equal: E Q;
 NotEqual: N E;
@@ -40,13 +71,25 @@ LessThanOrEqual: L E;
 
 COLUMN_NAME
    : VALID_ID_START VALID_ID_CHAR*
-   | '[' COLUMN_NAME ']'
    ;
 
 TEXT
 	:'"' .*? '"'
 	|'\'' .*? '\''
 	;
+
+NUMBER
+   : (SIGN)? UNSIGNED_INTEGER+
+   | (SIGN)? UNSIGNED_INTEGER+ ('.' UNSIGNED_INTEGER+)?
+   ;
+
+fragment UNSIGNED_INTEGER
+   : ('0' .. '9')
+   ;
+
+fragment SIGN
+   : ('+' | '-')
+   ;
    
 fragment VALID_ID_START
    : LOWERCASE | UPERCASE | '_'

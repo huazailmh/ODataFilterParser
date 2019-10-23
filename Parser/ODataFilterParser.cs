@@ -10,7 +10,9 @@ namespace ODataFilterParser
 
         public static string Parser(string filter)
         {
-            if (String.IsNullOrWhiteSpace(filter))
+            if (filter == null) throw new ArgumentNullException(nameof(filter));
+
+            if (String.IsNullOrEmpty(filter))
                 return filter;
 
             var stream = new AntlrInputStream(filter);
@@ -19,10 +21,10 @@ namespace ODataFilterParser
             var parser = new ODataParser(tokens);
             var tree = parser.program();
 
-            var visitor = new ODataVisitor();
+            var visitor = new ODataFilterVisitor();
             var result = visitor.Visit(tree);
 
-            return result.ToString();
+            return result?.ToString();
         }
     }
 
