@@ -1,8 +1,9 @@
 {
     "antlr4.generation": {
-        "mode": "internal",
+        "mode": "external",
         "language": "CSharp",
         "listeners": true,
         "visitors": true
-      }
+      },
+      "dotnet-test-explorer.testProjectPath": "${workspaceFolder}/Test"
 }
